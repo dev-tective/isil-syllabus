@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# ISIL Syllabus
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma web para compartir sílabos entre estudiantes de ISIL. Gratis y hecha por estudiantes.
 
-Currently, two official plugins are available:
+## Por qué hice esto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Durante mi tiempo en ISIL me di cuenta que muchos estudiantes necesitaban acceder a sílabos de cursos que ya llevé o que quieren llevar. En vez de andar pasando PDFs por WhatsApp todo el tiempo, decidí hacer una app donde todos puedan subir y descargar sílabos fácilmente.
 
-## React Compiler
+**Aclaración:** Este proyecto no tiene nada que ver oficialmente con ISIL. Los derechos del contenido académico son del instituto, yo solo hice la plataforma.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Qué puedes hacer
 
-## Expanding the ESLint configuration
+- Buscar sílabos por nombre de curso, año o semestre
+- Subir tus propios sílabos en PDF
+- Descargar los sílabos que necesites
+- Todo desde el celular o computadora
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tecnologías que usé
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**Frontend:**
+- React 18 con TypeScript
+- Tailwind CSS para los estilos
+- Vite como build tool
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Backend:**
+- Supabase como backend
+    - PostgreSQL para guardar la info de los sílabos
+    - Supabase Storage para los PDFs (usa S3 de AWS por debajo)
+    - Edge Functions serverless para la lógica del backend
+    - Row Level Security para proteger los datos
+- Redis para el rate limiting (evitar que alguien abuse del sistema)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Cómo funciona
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La app funciona así: el frontend en React se conecta a Supabase, que maneja todo el backend. Los metadatos de los sílabos (nombre, año, semestre) se guardan en PostgreSQL, y los PDFs se suben al Storage de Supabase que usa S3. Las Edge Functions procesan algunas cosas del lado del servidor, y Redis controla que nadie haga spam de requests.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Cosas que aprendí haciendo esto
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Manejar subida de archivos grandes sin que la app se trabe
+- Implementar rate limiting con Redis para que no abusen del sistema
+- Configurar bien la seguridad en Supabase con RLS
+- Hacer búsquedas rápidas en PostgreSQL con índices
+- Optimizar el rendimiento del frontend para que cargue rápido
+
+## Contribuir
+
+Si quieres agregar algo o mejorar el código, dale nomás. Haz un fork, crea tu rama, y manda el PR.
+
+---
+
+Hecho por un estudiante de ISIL que quería compartir sus sílabos de forma más fácil.

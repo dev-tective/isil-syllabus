@@ -27,38 +27,61 @@ export const readPdfText = async (file: File): Promise<SyllabusData | null> => {
         .join(' ');
 
     const getCourseCode = (): number => {
-        // Busca "Código de la unidad didáctica:" y captura los números que siguen
-        const regex = /Código de la unidad didáctica\s*:\s*(\d+)/;
+        // Buscar número de 5 dígitos que empiece con 3 (30000-39999)
+        const regex = /3\d{4}/;
         const match = pageText.match(regex);
 
-        return match ? Number.parseInt(match[1]) : 0;
+        return match ? Number.parseInt(match[0]) : 0;
     };
 
     const getPeriodAcademic = (): string | null => {
-        // Intenta primero con "Periodo académico"
-        let regex = /Periodo académico\s*:\s*([\d\s\-]+)/;
+        // MÉTODO 1: Buscar año 20XX seguido de números, guiones o espacios
+        const regex = /20\d{2}[\d\-\s]*/;
         let match = pageText.match(regex);
 
-        // Si no encuentra, intenta con "Periodo"
-        if (!match) {
-            regex = /Periodo\s*:\s*([\d\s\-]+)/;
-            match = pageText.match(regex);
+        if (match) {
+            // Eliminar espacios y todo lo que no sea dígito o guion
+            let cleanedValue = match[0].replace(/[^\d\-]/g, '');
+
+            // Si tiene formato YYYY-N (ej: 2025-1, 2021-0), convertir a YYYYN0 (ej: 202510, 202100)
+            if (/^\d{4}-\d$/.test(cleanedValue)) {
+                cleanedValue = cleanedValue.replace('-', '') + '0';
+            } else {
+                // Eliminar guiones restantes y tomar solo los primeros 6 dígitos
+                cleanedValue = cleanedValue.replace(/-/g, '').substring(0, 6);
+            }
+
+            if (cleanedValue.length === 6) {
+                return cleanedValue;
+            }
         }
 
-        if (!match) return null;
+        // MÉTODO 2: Si no encontró nada, buscar después de "Periodo académico"
+        const periodRegex = /periodo[\s\S]{0,20}acad[\s\S]{0,10}mico[\s\S]{0,5}:?/gi;
+        let periodIndex = pageText.search(periodRegex);
 
-        // Eliminar espacios y caracteres no numéricos excepto el guion
-        let cleanedValue = match[1].replace(/[^\d\-]/g, '');
-
-        // Si tiene formato YYYY-N (ej: 2025-1), convertir a YYYYN0 (ej: 202510)
-        if (/^\d{4}-[12]$/.test(cleanedValue)) {
-            cleanedValue = cleanedValue.replace('-', '') + '0';
-        } else {
-            // Si no tiene ese formato, solo eliminar todo lo que no sea dígito
-            cleanedValue = cleanedValue.replace(/\D/g, '');
+        // Si no encuentra "Periodo académico", buscar solo "Periodo"
+        if (periodIndex === -1) {
+            const simpleRegex = /periodo[\s\S]{0,5}:?/gi;
+            periodIndex = pageText.search(simpleRegex);
         }
 
-        return cleanedValue || null;
+        if (periodIndex !== -1) {
+            // Obtener los siguientes 50 caracteres después de "Periodo"
+            const afterPeriod = pageText.substring(periodIndex).substring(0, 50);
+
+            // Extraer TODOS los dígitos (eliminando cualquier carácter no numérico)
+            const digitsOnly = afterPeriod.replace(/[^\d]/g, '');
+
+            // Buscar patrón 20XXXX (6 dígitos que empiecen con 20)
+            const periodMatch = digitsOnly.match(/20\d{4}/);
+
+            if (periodMatch) {
+                return periodMatch[0];
+            }
+        }
+
+        return null;
     };
 
     // Mapear a la interfaz SyllabusData

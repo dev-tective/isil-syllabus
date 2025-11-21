@@ -36,20 +36,24 @@ const SyllabusCard = ({ syllabus }: SyllabusCardProps) => {
                     />
                 )}
 
-                <SyllabusCardField
-                    field={'Semestre'}
-                    value={`${periodAcademic.semester?.name} (${periodAcademic.semester?.period})`}
-                />
+                {periodAcademic && (
+                    <>
+                        <SyllabusCardField
+                            field={'Semestre'}
+                            value={`${periodAcademic.semester?.name} (${periodAcademic.semester?.period})`}
+                        />
 
-                <SyllabusCardField
-                    field={'Naturaleza'}
-                    value={periodAcademic.semester?.nature}
-                />
+                        <SyllabusCardField
+                            field={'Naturaleza'}
+                            value={periodAcademic.semester?.nature}
+                        />
 
-                <SyllabusCardField
-                    field={'Periodo Académico'}
-                    value={`${periodAcademic.year} - ${periodAcademic.code}`}
-                />
+                        <SyllabusCardField
+                            field={'Periodo Académico'}
+                            value={`${periodAcademic.year} - ${periodAcademic.code}`}
+                        />
+                    </>
+                )}
             </div>
 
             <button className={'w-full btn-primary py-2'}>

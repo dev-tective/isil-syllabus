@@ -14,7 +14,7 @@ export interface Syllabus {
     id: number;
     pdfUrl: string;
     course: Course;
-    periodAcademic: PeriodAcademic;
+    periodAcademic: PeriodAcademic | null;
 }
 
 interface Course {
@@ -80,7 +80,12 @@ function useSyllabus() {
 
             const years = Array.from(
                 new Set(
-                    allSyllables.map(s => s.periodAcademic.year.toString())
+                    allSyllables
+                        .filter(
+                            (s): s is Syllabus & { periodAcademic: PeriodAcademic } =>
+                                s.periodAcademic !== null
+                        )
+                        .map(s => s.periodAcademic.year.toString())
                 )
             );
 
@@ -151,10 +156,10 @@ function useSyllabus() {
 
         // Filtros
         const filtered = allSyllables.filter(({ periodAcademic, course }) => {
-            const yearMatch = syllabusFilter.years.length === 0 ||
+            const yearMatch = syllabusFilter.years.length === 0 || periodAcademic &&
                 syllabusFilter.years.includes(periodAcademic.year);
 
-            const semesterMatch = syllabusFilter.semesters.length === 0 ||
+            const semesterMatch = syllabusFilter.semesters.length === 0 || periodAcademic &&
                 syllabusFilter.semesters.includes(periodAcademic.semester.id);
 
             const nameMatch = syllabusFilter.name === '' || course != null &&

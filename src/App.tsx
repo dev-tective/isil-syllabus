@@ -35,12 +35,12 @@ function AppContent() {
     };
 
     return (
-        <main className={'bg-gray-800 min-h-screen'}>
+        <main className={'bg-gray-800 min-h-screen flex flex-col'}>
             <AddSyllabusModal
                 show={showModal}
                 onClose={() => setShowModal(false)}
             />
-            <div className={'sticky top-0 bg-gray-800'}>
+            <div className={'sticky top-0 bg-gray-800 z-10'}>
                 <header className={'flex justify-between w-full bg-gray-900 py-3 px-5 text-white font-bold'}>
                     <h1 className={'text-3xl'}>
                         <strong className={'text-cyan-400 '}>ISIL</strong> Syllabus
@@ -70,7 +70,7 @@ function AppContent() {
                     />
                 </section>
             </div>
-            <div className={'w-full h-fit flex justify-center flex-wrap gap-5 pb-7'}>
+            <div className={'w-full h-fit flex justify-center flex-wrap gap-5 pb-7 flex-grow'}>
                 {error && (
                     <h1 className={'text-red-500 text-xl font-bold mt-5 text-center'}>{error}</h1>
                 )}
@@ -81,13 +81,34 @@ function AppContent() {
                     <SyllabusCard key={index} syllabus={syllabus} />
                 ))}
             </div>
+
+            {/* Footer informativo */}
+            <footer className={'bg-gray-900 text-white py-6 px-5 mt-10 border-t-2 border-cyan-400'}>
+                <div className={'max-w-4xl mx-auto'}>
+                    <div className={'text-sm text-gray-300 space-y-2'}>
+                        <p className={'text-center'}>
+                            Esta aplicación ha sido creada <strong>por estudiantes y para estudiantes</strong> de manera completamente gratuita.
+                        </p>
+                        <p className={'text-center'}>
+                            El objetivo es compartir sílabos acumulados durante el tiempo de estudio para facilitar el acceso a material académico a toda la comunidad estudiantil.
+                        </p>
+                        <p className={'text-center text-xs text-gray-400 mt-4 pt-4 border-t border-gray-700'}>
+                            <strong>Importante:</strong> Todos los derechos del contenido académico y la marca ISIL son reservados por el Instituto San Ignacio de Loyola. Este es un proyecto independiente desarrollado por un estudiante sin afiliación oficial con la institución.
+                        </p>
+                        <p className={'text-center text-xs text-gray-500 mt-2'}>
+                            © {new Date().getFullYear()} - ISIL Syllabus
+                        </p>
+                    </div>
+                </div>
+            </footer>
+
             <section className={`flex gap-3 fixed z-20 right-5 bottom-5`}>
                 <button
                     disabled={loading}
                     className={'btn-primary rounded-xl p-3 text-3xl'}
                     onClick={getAllSyllabus}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m4.75 10.75h-3m12.5-2c0 3-2.79822 5.5-6.25 5.5-3.75 0-6.25-3.5-6.25-3.5v3.5m9.5-9h3m-12.5 2c0-3 2.79822-5.5 6.25-5.5 3.75 0 6.25 3.5 6.25 3.5v-3.5"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="m4.75 10.75h-3m12.5-2c0 3-2.79822 5.5-6.25 5.5-3.75 0-6.25-3.5-6.25-3.5v3.5m9.5-9h3m-12.5 2c0-3 2.79822-5.5 6.25-5.5 3.75 0 6.25 3.5 6.25 3.5v-3.5"/></svg>
                 </button>
             </section>
         </main>
