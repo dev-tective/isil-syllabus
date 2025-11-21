@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.btn-primary {
+    @apply bg-cyan-500 hover:bg-cyan-600 text-white font-bold transition rounded-lg disabled:bg-cyan-800;
+}
