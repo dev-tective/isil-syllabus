@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
 .btn-primary {
-    @apply bg-cyan-500 hover:bg-cyan-600 text-white font-bold transition rounded-lg disabled:bg-cyan-800;
+    @apply bg-linear-to-r from-cyan-400 to-blue-500 text-white font-bold transition rounded-lg disabled:bg-cyan-800;
+
+    &:hover {
+        @apply bg-linear-to-r from-cyan-500 to-blue-600;
+    }
+    
+    &:disabled {
+        @apply bg-linear-to-r from-cyan-800 to-blue-800;
+    }
 }

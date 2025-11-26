@@ -5,16 +5,14 @@ interface SyllabusCardProps {
 }
 
 interface SyllabusCardFieldProps {
-    field: string;
     value: string | number;
 }
 
-export const SyllabusCardField = ({ field, value }: SyllabusCardFieldProps) => {
+export const SyllabusCardField = ({ value }: SyllabusCardFieldProps) => {
     return (
-        <div className={'w-full flex justify-between text-md'}>
-            <strong>{field}:</strong>
-            <span className={'capitalize'}>{value}</span>
-        </div>
+        <span className={'py-1 px-2 bg-black border-1 border-white text-white rounded-lg'}>
+            {value}
+        </span>
     )
 }
 
@@ -22,49 +20,57 @@ const SyllabusCard = ({ syllabus }: SyllabusCardProps) => {
     const { course, periodAcademic, pdfUrl } = syllabus;
 
     return (
-        <section className="w-1/5 min-w-[300px] bg-gray-600 rounded-xl flex flex-wrap content-between p-4 gap-6">
-            <header className={'w-full border-b-2 border-b-cyan-500 text-white'}>
-                <h1 className={'text-cyan-500 text-2xl font-bold capitalize'}>{course && course.name}</h1>
-                <p className={'text-lg'}><strong>Código:</strong> {course && course.code}</p>
-            </header>
+        <section className="pb-4 w-1/5 min-w-72 rounded-2xl flex flex-wrap gap-3 overflow-hidden text-white bg-gray-900">
+            <div className="w-full h-1 bg-linear-to-r from-cyan-400 to-blue-500"></div>
+            <div className={'px-4 flex flex-wrap content-between gap-4'}>
+                <h1 className={'w-full text-2xl font-bold capitalize'}>{course && course.name}</h1>
 
-            <div className={'w-full text-white gap-2 flex flex-col'}>
-                {course && (
-                    <SyllabusCardField
-                        field={'Creditos'}
-                        value={course.credits}
-                    />
-                )}
+                <div className="w-full flex flex-wrap gap-2 text-md font-bold">
+                    <span className={'px-2 bg-linear-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center'}>
+                        {course && course.code}
+                    </span>
 
-                {periodAcademic && (
-                    <>
+                    {course && (
                         <SyllabusCardField
-                            field={'Semestre'}
-                            value={`${periodAcademic.semester?.name} (${periodAcademic.semester?.period})`}
+                            value={`${course.credits} Creditos`}
                         />
+                    )}
 
-                        <SyllabusCardField
-                            field={'Naturaleza'}
-                            value={periodAcademic.semester?.nature}
-                        />
-
-                        <SyllabusCardField
-                            field={'Periodo Académico'}
-                            value={`${periodAcademic.year} - ${periodAcademic.code}`}
-                        />
-                    </>
-                )}
-            </div>
-
-            <button className={'w-full btn-primary py-2'}>
-                <a href={pdfUrl}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className=""
+                    {periodAcademic && (
+                        <>
+                            <SyllabusCardField value={course.courseType} />
+                            <SyllabusCardField value={`${periodAcademic.semester?.name} (${periodAcademic.semester?.period})`} />
+                            <SyllabusCardField value={periodAcademic.semester?.nature} />
+                            <SyllabusCardField value={`${periodAcademic.year} - ${periodAcademic.code}`} />
+                        </>
+                    )}
+                </div>
+                <a
+                    href={pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-bold
+                 flex items-center gap-1"
                 >
                     Ver Sílabo (PDF)
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        className="bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
+                    >
+                        <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13.5 10.5L21 3m-5 0h5v5m0 6v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"
+                        />
+                    </svg>
                 </a>
-            </button>
+            </div>
         </section>
     );
 };

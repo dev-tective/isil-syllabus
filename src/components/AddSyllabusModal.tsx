@@ -123,7 +123,7 @@ const AddSyllabusModal = ({ show, onClose }: AddSyllabusModalProps) => {
                 className={'h-full w-full bg-gray-950/50 absolute -z-1 backdrop-blur-sm'}
                 onClick={handleClose}
             />
-            <div className={'rounded-xl relative min-w-72 w-1/3 max-h-[90vh] overflow-y-auto bg-gray-600 p-4 text-center text-white flex flex-col gap-4 items-center'}>
+            <div className={'rounded-xl relative min-w-72 w-1/3 max-h-[90vh] overflow-y-auto bg-gray-800 p-4 text-center text-white flex flex-col gap-4 items-center'}>
                 <h1 className={'text-cyan-400 text-2xl font-bold'}>Agrega un Sílabo</h1>
                 <p className={'text-md'}>Peso máximo 1MB y formato PDF.</p>
 

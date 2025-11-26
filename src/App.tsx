@@ -1,15 +1,20 @@
 import { SupabaseProvider } from "./contexts/SupabaseContext.tsx"
-import SyllabusFilterOptions, {type OptionType} from "./components/SyllabusFilterOptions.tsx";
+import SyllabusFilterOptions, { type OptionType } from "./components/SyllabusFilterOptions.tsx";
 import useSyllabus from "./components/hooks/useSyllabus.ts";
 import SyllabusCard from "./components/SyllabusCard.tsx";
 import * as React from "react";
 import AddSyllabusModal from "./components/AddSyllabusModal.tsx";
-import {useState} from "react";
+import { useState } from "react";
 
 const semesterOptions: OptionType[] = [
     { value: "1", label: "Verano" },
     { value: "2", label: "Regular 1" },
     { value: "3", label: "Regular 2" },
+]
+
+const courseTypeOptions: OptionType[] = [
+    { value: "Carrera técnica", label: "Carrera técnica" },
+    { value: "Escuela", label: "Escuela" },
 ]
 
 function AppContent() {
@@ -21,6 +26,7 @@ function AppContent() {
         getAllSyllabus,
         setName,
         setSemesters,
+        setCourseType,
         setYears
     } = useSyllabus();
     const [showModal, setShowModal] = useState(false);
@@ -35,22 +41,23 @@ function AppContent() {
     };
 
     return (
-        <main className={'bg-gray-800 min-h-screen flex flex-col'}>
+        <main className={'bg-gray-950 min-h-screen flex flex-col'}>
             <AddSyllabusModal
                 show={showModal}
                 onClose={() => setShowModal(false)}
             />
-            <div className={'sticky top-0 bg-gray-800 z-10'}>
-                <header className={'flex justify-between w-full bg-gray-900 py-3 px-5 text-white font-bold'}>
+            <div className={'sticky top-0 bg-gray-950 z-10'}>
+                <header className={'flex justify-between w-full bg-gray-950 py-3 px-5 text-white font-bold'}>
                     <h1 className={'text-3xl'}>
                         <strong className={'text-cyan-400 '}>ISIL</strong> Syllabus
                     </h1>
                     <button
                         title={'Agregar Sílabo'}
-                        className={'btn-primary py-2 px-3'}
+                        className={'btn-primary py-2 px-3 rounded-lg group-hover:'}
                         onClick={() => setShowModal(true)}
                     >+ Sílabo</button>
                 </header>
+                <div className={'h-1 w-full bg-linear-to-r from-cyan-400 to-blue-500'}></div>
                 <section className={'flex flex-wrap justify-center gap-3 py-6'}>
                     <input
                         onChange={handleNameChange}
@@ -68,11 +75,17 @@ function AppContent() {
                         options={semesterOptions}
                         setFilterValue={setSemesters}
                     />
+                    <SyllabusFilterOptions
+                        placeholder={'Tipo'}
+                        options={courseTypeOptions}
+                        setFilterValue={setCourseType}
+                    />
                 </section>
             </div>
-            <div className={'w-full h-fit flex justify-center flex-wrap gap-5 pb-7 flex-grow'}>
+
+            <div className={`w-full h-fit flex justify-center flex-wrap gap-7 pb-7`}>
                 {error && (
-                    <h1 className={'text-red-500 text-xl font-bold mt-5 text-center'}>{error}</h1>
+                    <h1 className={'text-red-500 text-xl font-bold mt-5 text-center h-full'}>{error}</h1>
                 )}
                 {loading && !error && (
                     <h1 className={'text-white text-xl font-bold mt-5'}>Cargando...</h1>
@@ -83,7 +96,8 @@ function AppContent() {
             </div>
 
             {/* Footer informativo */}
-            <footer className={'bg-gray-900 text-white py-6 px-5 mt-10 border-t-2 border-cyan-400'}>
+            <div className={'h-1 w-full bg-linear-to-r from-cyan-400 to-blue-500 mt-10'}></div>
+            <footer className={'bg-gray-950 text-white py-6 px-5'}>
                 <div className={'max-w-4xl mx-auto'}>
                     <div className={'text-sm text-gray-300 space-y-2'}>
                         <p className={'text-center'}>

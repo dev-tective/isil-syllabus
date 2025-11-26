@@ -8,6 +8,7 @@ export interface SyllabusFilter {
     years: number[];
     semesters: number[];
     department_ids: number[];
+    courseType: string[];
 }
 
 export interface Syllabus {
@@ -22,6 +23,7 @@ interface Course {
     code: number;
     name: string;
     credits: number;
+    courseType: string;
 }
 
 interface PeriodAcademic {
@@ -39,7 +41,7 @@ function useSyllabus() {
     const [error, setError] = useState<string | null>(null);
     const [syllables, setSyllables] = useState<Syllabus[]>([]);
     const [syllabusFilter, setSyllabusFilter] = useState<SyllabusFilter>({
-        name: '', years: [], semesters: [], department_ids: []
+        name: '', years: [], semesters: [], department_ids: [], courseType: []
     })
     const [totalYears, setTotalYears] = useState<string[]>([])
 
@@ -165,7 +167,10 @@ function useSyllabus() {
             const nameMatch = syllabusFilter.name === '' || course != null &&
                 normalizeString(course.name).includes(normalizedSearchName);
 
-            return yearMatch && semesterMatch && nameMatch;
+            const courseTypeMatch = syllabusFilter.courseType.length === 0 || course &&
+                syllabusFilter.courseType.includes(course.courseType);
+
+            return yearMatch && semesterMatch && nameMatch && courseTypeMatch;
         });
 
         setSyllables(filtered);
@@ -194,6 +199,14 @@ function useSyllabus() {
         }))
     }
 
+    const setCourseType = (values: OptionType[]) => {
+        const courseTypes = values.map(value => value.value);
+        setSyllabusFilter(prev => ({
+            ...prev,
+            courseType: courseTypes
+        }))
+    }
+
     useEffect(() => {
         if (!hasFetchedRef.current) {
             getAllSyllabus();
@@ -218,6 +231,7 @@ function useSyllabus() {
         setName,
         setYears,
         setSemesters,
+        setCourseType,
         syllables,
         loading,
         error,

@@ -42,14 +42,14 @@ const SyllabusFilterOptions = ({ options, setFilterValue, placeholder } : Props)
                 option: (base, state) => ({
                     ...base,
                     backgroundColor: state.isSelected
-                        ? '#06b6d4' // cyan-500
+                        ? '#3b82f6' // blue-500
                         : state.isFocused
-                            ? '#22d3ee' // cyan-400 (hover)
+                            ? '#60a5fa' // blue-400 (hover)
                             : '#1f2937', // gray-800
                     color: '#ffffff',
                     cursor: 'pointer',
                     ':active': {
-                        backgroundColor: '#0891b2' // cyan-600
+                        backgroundColor: '#2563eb' // blue-600
                     }
                 }),
                 menu: (base) => ({
@@ -58,7 +58,7 @@ const SyllabusFilterOptions = ({ options, setFilterValue, placeholder } : Props)
                 }),
                 multiValue: (base) => ({
                     ...base,
-                    backgroundColor: '#06b6d4', // cyan-500
+                    backgroundColor: '#3b82f6', // blue-500
                 }),
                 multiValueLabel: (base) => ({
                     ...base,
@@ -68,7 +68,7 @@ const SyllabusFilterOptions = ({ options, setFilterValue, placeholder } : Props)
                     ...base,
                     color: '#ffffff',
                     ':hover': {
-                        backgroundColor: '#0891b2', // cyan-600
+                        backgroundColor: '#2563eb', // blue-600
                         color: '#ffffff',
                     }
                 })

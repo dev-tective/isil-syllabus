@@ -27,17 +27,16 @@ export const readPdfText = async (file: File): Promise<SyllabusData | null> => {
         .join(' ');
 
     const getCourseCode = (): number => {
-        // Buscar número de 5 dígitos que empiece con 3 (30000-39999)
-        const regex = /3\d{4}/;
+        // Buscar número de 5 dígitos que empiece con 3 o 4 (30000-49999)
+        const regex = /[34]\d{4}/;
         const match = pageText.match(regex);
-
         return match ? Number.parseInt(match[0]) : 0;
     };
 
     const getPeriodAcademic = (): string | null => {
         // MÉTODO 1: Buscar año 20XX seguido de números, guiones o espacios
         const regex = /20\d{2}[\d\-\s]*/;
-        let match = pageText.match(regex);
+        const match = pageText.match(regex);
 
         if (match) {
             // Eliminar espacios y todo lo que no sea dígito o guion
