@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import type { User } from '@supabase/supabase-js';
 
 const HeaderBtn = ({ icon, onClick, title }: { icon: string, onClick?: () => void, title?: string }) => {
     return (
@@ -17,29 +18,35 @@ const HeaderBtn = ({ icon, onClick, title }: { icon: string, onClick?: () => voi
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const checkSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            setIsLoggedIn(!!session);
+            console.table(session)
+            setUser(session?.user ?? null);
         };
         checkSession();
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setIsLoggedIn(!!session);
+            setUser(session?.user ?? null);
+            console.table(session)
         });
 
         return () => subscription.unsubscribe();
     }, []);
 
     const handleUserClick = async () => {
-        if (isLoggedIn) {
+        if (user) {
             await supabase.auth.signOut();
         } else {
             navigate('/login');
         }
     };
+
+    const avatarUrl: string | undefined =
+        user?.user_metadata?.avatar_url ?? user?.user_metadata?.picture;
+        console.table(user)
 
     return (
         <main className={'bg-brand-dark min-h-screen flex flex-col'}>
@@ -58,35 +65,22 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                     <strong className={'text-cyan-400'}>ISIL</strong> Syllabus
                 </span>
 
-                <HeaderBtn
-                    icon={isLoggedIn ? 'bxs:log-in' : 'mingcute:user-4-fill'}
-                    onClick={handleUserClick}
-                    title={isLoggedIn ? "Cerrar sesión" : "Iniciar sesión"}
-                />
+                <div className="flex items-center gap-3">
+                    <img
+                        src={avatarUrl}
+                        alt="Avatar"
+                        referrerPolicy="no-referrer"
+                        className="w-8 h-8 rounded-full object-cover border border-brand-cyan/20"
+                    />
+                    <HeaderBtn
+                        icon={user ? 'bxs:log-in' : 'mingcute:user-4-fill'}
+                        onClick={handleUserClick}
+                        title={user ? "Cerrar sesión" : "Iniciar sesión"}
+                    />
+                </div>
             </header>
 
             {children}
-
-            {/* Footer informativo */}
-            {/* <div className={'h-1 w-full bg-linear-to-r from-cyan-400 to-blue-500 mt-10'}></div>
-            <footer className={'bg-gray-950 text-white py-6 px-5'}>
-                <div className={'max-w-4xl mx-auto'}>
-                    <div className={'text-sm text-gray-300 space-y-2'}>
-                        <p className={'text-center'}>
-                            Esta aplicación ha sido creada <strong>por estudiantes y para estudiantes</strong> de manera completamente gratuita.
-                        </p>
-                        <p className={'text-center'}>
-                            El objetivo es compartir sílabos acumulados durante el tiempo de estudio para facilitar el acceso a material académico a toda la comunidad estudiantil.
-                        </p>
-                        <p className={'text-center text-xs text-gray-400 mt-4 pt-4 border-t border-gray-700'}>
-                            <strong>Importante:</strong> Todos los derechos del contenido académico y la marca ISIL son reservados por el Instituto San Ignacio de Loyola. Este es un proyecto independiente desarrollado por un estudiante sin afiliación oficial con la institución.
-                        </p>
-                        <p className={'text-center text-xs text-gray-500 mt-2'}>
-                            © {new Date().getFullYear()} - ISIL Syllabus
-                        </p>
-                    </div>
-                </div>
-            </footer> */}
         </main>
     )
 }
