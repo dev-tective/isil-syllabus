@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { Icon } from '@iconify/react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const Login = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -217,6 +217,17 @@ export const Login = () => {
                             {isLogin ? "Regístrate aquí" : "Inicia sesión"}
                         </strong>
                     </button>
+                </div>
+
+                {/* ── Legal links ── */}
+                <div className="flex items-center justify-center gap-4 pt-2 text-xs text-gray-600">
+                    <Link to="/privacy" className="hover:text-gray-400 transition-colors">
+                        Política de Privacidad
+                    </Link>
+                    <span>·</span>
+                    <Link to="/terms" className="hover:text-gray-400 transition-colors">
+                        Condiciones del Servicio
+                    </Link>
                 </div>
             </section>
         </div>
