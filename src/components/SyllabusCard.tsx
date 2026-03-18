@@ -1,29 +1,34 @@
-import type { Syllabus } from "./hooks/useSyllabus.ts";
+import type { Syllabus } from "../hooks/useSupabase";
 
-interface SyllabusCardProps {
-    syllabus: Syllabus;
-}
-
-interface SyllabusCardFieldProps {
-    value: string | number;
-}
-
-export const SyllabusCardField = ({ value }: SyllabusCardFieldProps) => {
+export const SyllabusCardField = ({ value }: { value: string | number }) => {
     return (
-        <span className={'py-1 px-2 bg-black border-1 border-white text-white rounded-lg'}>
+        <span className={'py-1 px-2 bg-black border border-white text-white rounded-lg'}>
             {value}
         </span>
     )
 }
 
-const SyllabusCard = ({ syllabus }: SyllabusCardProps) => {
-    const { course, periodAcademic, pdfUrl } = syllabus;
+const SyllabusCard = ({ syllabus } : { syllabus: Syllabus }) => {
+    const { course, periodAcademic, pdf_url } = syllabus;
 
     return (
-        <section className="pb-4 w-1/5 min-w-72 rounded-2xl flex flex-wrap gap-3 overflow-hidden text-white bg-gray-900">
-            <div className="w-full h-1 bg-linear-to-r from-cyan-400 to-blue-500"></div>
+        <section className="
+            flex flex-col
+            w-full p-5
+            bg-brand-cyan/5
+            backdrop-blur-md
+            border border-brand-cyan/10
+            rounded-2xl
+            shadow-lg
+        ">
+            <span className="
+                w-full h-32 
+                rounded-xl 
+                bg-linear-to-br from-brand-cyan/30 to-blue-600/30 
+                overflow-hidden relative
+            "/>
             <div className={'px-4 flex flex-wrap content-between gap-4'}>
-                <h1 className={'w-full text-2xl font-bold capitalize'}>{course && course.name}</h1>
+                <h1 className={'w-full text-xl font-bold capitalize'}>{course && course.name}</h1>
 
                 <div className="w-full flex flex-wrap gap-2 text-md font-bold">
                     <span className={'px-2 bg-linear-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center'}>
@@ -36,21 +41,22 @@ const SyllabusCard = ({ syllabus }: SyllabusCardProps) => {
                         />
                     )}
 
+                    <SyllabusCardField value={course.course_type} />
+
                     {periodAcademic && (
                         <>
-                            <SyllabusCardField value={course.courseType} />
-                            <SyllabusCardField value={`${periodAcademic.semester?.name} (${periodAcademic.semester?.period})`} />
-                            <SyllabusCardField value={periodAcademic.semester?.nature} />
+                            <SyllabusCardField value={`${periodAcademic.semester.name} (${periodAcademic.semester.period})`} />
+                            <SyllabusCardField value={periodAcademic.semester.nature} />
                             <SyllabusCardField value={`${periodAcademic.year} - ${periodAcademic.code}`} />
                         </>
                     )}
                 </div>
                 <a
-                    href={pdfUrl}
+                    href={pdf_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-bold
-                 flex items-center gap-1"
+                    flex items-center gap-1"
                 >
                     Ver Sílabo (PDF)
                     <svg

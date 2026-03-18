@@ -1,13 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+  /* Brand */
+  --color-brand-dark: #111d21;
+  --color-brand-navy: #121e2a;
+  --color-brand-blue: #1e3a5f;
+  --color-brand-cyan: #51bee6;
+  --color-brand-cyan-hover: #45a9cf;
+
+  /* Surface */
+  --color-surface-card: #162534;
+  --color-surface-border: #243b55;
+}
+
 .btn-primary {
-    @apply bg-linear-to-r from-cyan-400 to-blue-500 text-white font-bold transition rounded-lg disabled:bg-cyan-800;
+    @apply bg-linear-to-r from-brand-cyan to-brand-blue text-white font-bold transition rounded-lg;
 
     &:hover {
-        @apply bg-linear-to-r from-cyan-500 to-blue-600;
+        @apply from-brand-cyan-hover to-brand-blue;
     }
     
     &:disabled {
-        @apply bg-linear-to-r from-cyan-800 to-blue-800;
+        @apply opacity-60 cursor-not-allowed;
     }
 }
