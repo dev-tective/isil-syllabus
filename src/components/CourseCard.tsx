@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import type { Course } from "../hooks/useCourse";
 import { useNavigate } from "react-router-dom";
+import { DifficultyBadge } from "./shared/DifficultyBadge";
 
 export const CourseCard = ({ course }: { course: Course }) => {
     const { 
@@ -17,7 +18,7 @@ export const CourseCard = ({ course }: { course: Course }) => {
 
     return (
         <section
-            onClick={() => navigate(`/course/${code}`)} 
+            onClick={() => navigate(`/cursos/${code}`)} 
             className="
                 flex flex-col
                 w-full p-5 gap-2
@@ -38,16 +39,12 @@ export const CourseCard = ({ course }: { course: Course }) => {
             ">
                 <Icon icon="ant-design:book-filled" />
 
-                <div className={`
-                    absolute bottom-2 right-2
-                    px-2 py-1
-                    text-xs text-white font-bold
-                    uppercase rounded-sm
-                    ${difficulty === 'fácil' ? 'bg-green-500/80' : 
-                      difficulty === 'intermedio' ? 'bg-yellow-500/80' : 
-                      difficulty === 'difícil' ? 'bg-red-500/80' : 'bg-brand-dark/80'}
-                `}>
-                    {difficulty || 'Sin evaluar'}
+                <div className="absolute bottom-2 right-2">
+                    <DifficultyBadge 
+                        difficulty={difficulty}
+                        opacity={80}
+                        className="text-xs px-2 py-1" 
+                    /> 
                 </div>    
             </div>
            

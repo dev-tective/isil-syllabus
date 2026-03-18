@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from "@iconify/react";
-import { AddSyllabusModal } from './AddSyllabusModal';
-import { supabase } from '../lib/supabaseClient';
+import { AddSyllabusModal } from '../AddSyllabusModal';
+import { supabase } from '../../lib/supabaseClient';
 
 export const UploadSyllabus = () => {
     const navigate = useNavigate();
@@ -44,8 +44,8 @@ export const UploadSyllabus = () => {
                 Subir tu sílabo
             </button>
 
-            <AddSyllabusModal 
-                show={showModal} 
+            <AddSyllabusModal
+                show={showModal}
                 onClose={() => setShowModal(false)}
             />
         </>

@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import { EmptyState } from './EmptyState';
-import { UploadSyllabus } from '../UploadSyllabus';
-import type { Syllabus } from '../../hooks/useCourse';
+import { UploadSyllabus } from '@/components/interactive/UploadSyllabus';
+import type { Syllabus } from '@/hooks/useCourse';
 
 interface SyllabusTabProps {
   syllabuses: Syllabus[];

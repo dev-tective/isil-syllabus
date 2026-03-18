@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { supabase } from '../lib/supabaseClient';
-import { useCourseByCode } from '../hooks/useCourse';
+import { supabase } from '@/lib/supabaseClient';
+import { useCourseByCode } from '@/hooks/useCourse';
 
-import { CourseHeader } from '../components/course/CourseHeader';
-import { StatCard } from '../components/course/StatCard';
-import { TabButton } from '../components/course/TabButton';
-import { SyllabusTab } from '../components/course/SyllabusTab';
-import { NotesTab } from '../components/course/NotesTab';
-import { RecommendationsTab } from '../components/course/RecommendationsTab';
+import { CourseHeader } from '@/components/course/CourseHeader';
+import { StatCard } from '@/components/course/StatCard';
+import { TabButton } from '@/components/course/TabButton';
+import { SyllabusTab } from '@/components/course/SyllabusTab';
+import { NotesTab } from '@/components/course/NotesTab';
+import { RecommendationsTab } from '@/components/course/RecommendationsTab';
 
 type Tab = 'syllabus' | 'notes' | 'recommendations';
 

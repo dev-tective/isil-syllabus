@@ -1,8 +1,13 @@
-import { useState } from "react";
+// NoteModification.tsx — detecta y renderiza TODOS los videos del textarea
+
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Difficulty } from "../hooks/useNote";
 import { useCreateNote, useUpdateNote } from "../hooks/useNote";
 import { Icon } from "@iconify/react";
+import { detectAllVideos } from "../hooks/useVideoDetectation";
+import type { DetectedVideo } from "../hooks/useVideoDetectation";
+import { VideoPreviewList } from "./interactive/VideoPreview";
 
 interface NoteModificationProps {
     initialContent?: string;
@@ -12,16 +17,19 @@ interface NoteModificationProps {
     userId: string | null;
     onSuccess?: () => void;
     onCancel?: () => void;
+    /** Callback con todos los videos detectados en el texto (array vacío si no hay) */
+    onVideosDetected?: (videos: DetectedVideo[]) => void;
 }
 
-export const NoteModification = ({ 
-    initialContent = "", 
-    initialDifficulty = null, 
-    noteId, 
-    courseId, 
+export const NoteModification = ({
+    initialContent = "",
+    initialDifficulty = null,
+    noteId,
+    courseId,
     userId,
     onSuccess,
-    onCancel
+    onCancel,
+    onVideosDetected,
 }: NoteModificationProps) => {
     const navigate = useNavigate();
     const createNoteMutation = useCreateNote();
@@ -34,29 +42,35 @@ export const NoteModification = ({
     const isPending = createNoteMutation.isPending || updateNoteMutation.isPending;
     const isError = createNoteMutation.isError || updateNoteMutation.isError;
 
+    // Detecta todos los videos cada vez que cambia el contenido
+    const detectedVideos = useMemo(() => {
+        const videos = detectAllVideos(content);
+        onVideosDetected?.(videos);
+        return videos;
+    }, [content]); // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleSave = () => {
         if (!userId) {
-            navigate('/login');
+            navigate("/login");
             return;
         }
-
         if (!content.trim()) return;
 
         if (isEditing) {
             updateNoteMutation.mutate(
                 { id: noteId, content, difficulty },
-                { onSuccess: () => {
-                    if (onSuccess) onSuccess();
-                }}
+                { onSuccess: () => onSuccess?.() }
             );
         } else {
             createNoteMutation.mutate(
                 { content, difficulty, course_id: courseId, user_id: userId },
-                { onSuccess: () => {
-                    setContent("");
-                    setDifficulty(null);
-                    if (onSuccess) onSuccess();
-                }}
+                {
+                    onSuccess: () => {
+                        setContent("");
+                        setDifficulty(null);
+                        onSuccess?.();
+                    },
+                }
             );
         }
     };
@@ -79,6 +93,7 @@ export const NoteModification = ({
                     <option value="difícil">Difícil</option>
                 </select>
             </div>
+
             <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -86,6 +101,10 @@ export const NoteModification = ({
                 className="w-full h-24 p-3 bg-brand-dark/50 text-white placeholder-gray-500 border border-brand-cyan/20 rounded-xl focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan resize-none transition-all text-sm"
                 disabled={isPending}
             />
+
+            {/* Lista de todos los videos detectados */}
+            <VideoPreviewList videos={detectedVideos} />
+
             <div className="flex justify-end gap-3">
                 {onCancel && (
                     <button
@@ -98,7 +117,13 @@ export const NoteModification = ({
                 )}
                 <button
                     onClick={handleSave}
-                    disabled={!content.trim() || isPending || (isEditing && content === initialContent && difficulty === initialDifficulty)}
+                    disabled={
+                        !content.trim() ||
+                        isPending ||
+                        (isEditing &&
+                            content === initialContent &&
+                            difficulty === initialDifficulty)
+                    }
                     className="px-6 py-2 bg-brand-cyan text-brand-dark font-bold text-sm rounded-xl hover:bg-brand-cyan-hover transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {isPending ? (
@@ -106,11 +131,18 @@ export const NoteModification = ({
                     ) : (
                         <Icon icon={isEditing ? "mingcute:save-line" : "mingcute:send-fill"} />
                     )}
-                    {isPending ? "Guardando..." : (isEditing ? "Guardar cambios" : "Publicar apunte")}
+                    {isPending
+                        ? "Guardando..."
+                        : isEditing
+                        ? "Guardar cambios"
+                        : "Publicar apunte"}
                 </button>
             </div>
+
             {isError && (
-                <p className="text-red-500 text-xs mt-2 text-right">Ocurrió un error al guardar el apunte.</p>
+                <p className="text-red-500 text-xs mt-2 text-right">
+                    Ocurrió un error al guardar el apunte.
+                </p>
             )}
         </div>
     );

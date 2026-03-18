@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 
 export const RECOMMENDATION_TYPES = [
     "solo lee ppt",
@@ -33,17 +33,38 @@ export interface TeacherRecomendation {
     created_at: string;
 }
 
+// ─── Tipos ────────────────────────────────────────────────────────────────────
+
+export interface TopTeacher {
+    teacher_name:             string;
+    recommendation_count:     number;
+    not_recommendation_count: number;
+    all_flags:                string[];
+    content_messages:         string[] | null;
+    course_names:             string[] | null;
+}
+
+// ─── get_distinct_teacher_names ───────────────────────────────────────────────
+
 export const useGetTeachers = async (): Promise<string[]> => {
     const { data, error } = await supabase
-        .from('teacher_recommendation')
-        .select('teacher_name')
-        .not('teacher_name', 'is', null);
+        .rpc('get_distinct_teacher_names');
 
     if (error) throw new Error(error.message);
 
-    // Deduplicate client-side (PostgREST distinct is not supported via JS SDK)
-    return [...new Set((data ?? []).map((d) => d.teacher_name as string))];
-}
+    return (data ?? []).map((d: { teacher_name: string }) => d.teacher_name);
+};
+
+// ─── get_top_teachers ─────────────────────────────────────────────────────────
+
+export const useGetTopTeachers = async (): Promise<TopTeacher[]> => {
+    const { data, error } = await supabase
+        .rpc('get_top_teachers');
+
+    if (error) throw new Error(error.message);
+
+    return (data ?? []) as TopTeacher[];
+};
 
 export const useCreateRecomendation = () => {
     const queryClient = useQueryClient();

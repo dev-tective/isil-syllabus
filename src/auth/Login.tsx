@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 import { Icon } from '@iconify/react';
 import { useNavigate, Link } from "react-router-dom";
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { CourseCard } from "../components/CourseCard";
-import { useCourses } from "../hooks/useCourse";
+import { CourseCard } from "@/components/CourseCard";
+import { useCourses } from "@/hooks/useCourse";
 import { Icon } from '@iconify/react';
-import { UploadSyllabus } from "../components/UploadSyllabus";
+import { UploadSyllabus } from "@/components/interactive/UploadSyllabus";
 
 const cleanString = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
@@ -17,7 +17,7 @@ export const SyllabusContent = () => {
         );
 
     return (
-        <div className="flex flex-col justify-start items-center w-full">
+        <div className="flex flex-col justify-start items-center w-full mb-auto">
             <section className="w-11/12 mx-auto py-5 space-y-5">
                 <div className="space-y-2">
                     <h1 className="w-4/5 text-2xl text-white font-bold">
@@ -55,7 +55,7 @@ export const SyllabusContent = () => {
                                 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan
                                 transition-all
                             "
-                            placeholder='Buscar cursos de interes'
+                            placeholder='Buscar cursos de tu interes'
                         />
                     </div>
                     <UploadSyllabus />

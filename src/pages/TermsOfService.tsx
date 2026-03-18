@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react";
+import { Section } from "@/components/shared/Section";
 
 export const TermsOfService = () => {
     const lastUpdated = "18 de marzo de 2026";
@@ -141,18 +142,3 @@ export const TermsOfService = () => {
         </div>
     );
 };
-
-const Section = ({
-    title,
-    children,
-}: {
-    title: string;
-    children: React.ReactNode;
-}) => (
-    <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-white border-l-2 border-brand-cyan pl-3">
-            {title}
-        </h2>
-        <div className="text-sm leading-relaxed space-y-2 pl-1">{children}</div>
-    </section>
-);

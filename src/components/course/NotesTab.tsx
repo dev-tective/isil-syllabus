@@ -3,6 +3,10 @@ import { NoteModification } from '../NoteModification';
 import { useDeleteNote } from '../../hooks/useNote';
 import { EmptyState } from './EmptyState';
 import { DifficultyPill } from './DifficultyBadge';
+import { useState } from 'react';
+import type { Note } from '../../hooks/useNote';
+import { detectAllVideos } from '@/hooks/useVideoDetectation';
+import { VideoPreviewList } from '@/components/interactive/VideoPreview';
 
 interface NotesTabProps {
   notes: Note[];
@@ -21,6 +25,21 @@ export const NotesTab = ({ notes, courseId, userId }: NotesTabProps) => {
     </div>
   );
 };
+
+/* ─── Utilidad: oculta URLs de video del texto ─────────────────── */
+
+// Regex amplio para URLs — elimina cualquier link que detectAllVideos haya encontrado
+const URL_REGEX = /https?:\/\/[^\s]+/g;
+
+function stripVideoLinks(text: string): string {
+  const videos = detectAllVideos(text);
+  if (videos.length === 0) return text;
+  const videoUrls = new Set(videos.map((v) => v.url));
+  return text
+    .replace(URL_REGEX, (url) => (videoUrls.has(url) ? '' : url))
+    .replace(/\n{3,}/g, '\n\n') // colapsar líneas vacías extras
+    .trim();
+}
 
 /* ─── My note ─────────────────────────────────────────────────── */
 
@@ -52,18 +71,25 @@ const MyNoteSection = ({ myNote, courseId, userId }: MyNoteSectionProps) => {
     );
   }
 
-  return (
-    <div className="relative mb-6 overflow-hidden rounded-xl border border-brand-cyan/20 bg-brand-cyan/10 p-5 [--tw-ring-shadow:inset_0_0_0_2px_rgb(0_255_255/0.3)] space-y-3">
-      {/* "Mi apunte" badge */}
-      {/* <div className="absolute right-0 top-0 rounded-bl-xl bg-brand-cyan/20 p-2">
-        <span className="text-xs font-bold italic text-brand-cyan">Mi apunte</span>
-      </div> */}
+  const videos = detectAllVideos(myNote.content);
+  const cleanContent = stripVideoLinks(myNote.content);
 
-      <p className="whitespace-pre-line pt-2 text-sm leading-relaxed text-white">{myNote.content}</p>
+  return (
+    <div className="relative mb-6 overflow-hidden rounded-xl border border-brand-cyan/20 bg-brand-cyan/10 p-5 space-y-3">
+      {/* Texto sin los links de video */}
+      {cleanContent && (
+        <p className="whitespace-pre-line pt-2 text-sm leading-relaxed text-white">
+          {cleanContent}
+        </p>
+      )}
+
+      {/* Previews de videos */}
+      {videos.length > 0 && (
+        <VideoPreviewList videos={videos} />
+      )}
 
       <div className="flex items-center justify-between border-t border-brand-cyan/20 pt-3 text-xs">
         <DifficultyPill difficulty={myNote.define_difficulty as any} />
-
         <div className="flex items-center gap-3 text-gray-400">
           <span>{new Date(myNote.created_at).toLocaleDateString()}</span>
           <button
@@ -117,25 +143,36 @@ const CommunityNotes = ({ notes, hasMyNote, userId }: CommunityNotesProps) => {
       {hasMyNote && (
         <h3 className="mb-2 mt-6 text-sm font-bold text-gray-400">Comunidad</h3>
       )}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {notes.map((note) => (
-          <div key={note.id} className="space-y-3 rounded-xl border border-brand-cyan/10 bg-brand-cyan/5 p-5">
-            <p className="whitespace-pre-line text-sm leading-relaxed text-white">{note.content}</p>
-            <div className="flex items-center justify-between border-t border-brand-cyan/10 pt-3 text-xs">
-              <DifficultyPill difficulty={note.define_difficulty as any} />
-              <span className="text-gray-500">{new Date(note.created_at).toLocaleDateString()}</span>
+      <div className="grid grid-cols-1 gap-4">
+        {notes.map((note) => {
+          const videos = detectAllVideos(note.content);
+          const cleanContent = stripVideoLinks(note.content);
+
+          return (
+            <div key={note.id} className="space-y-3 rounded-xl border border-brand-cyan/10 bg-brand-cyan/5 p-5">
+              {cleanContent && (
+                <p className="whitespace-pre-line text-sm leading-relaxed text-white">
+                  {cleanContent}
+                </p>
+              )}
+
+              {videos.length > 0 && (
+                <VideoPreviewList videos={videos} />
+              )}
+
+              <div className="flex items-center justify-between border-t border-brand-cyan/10 pt-3 text-xs">
+                <DifficultyPill difficulty={note.define_difficulty as any} />
+                <span className="text-gray-500">{new Date(note.created_at).toLocaleDateString()}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );
 };
 
 /* ─── Local hook ───────────────────────────────────────────────── */
-
-import { useState } from 'react';
-import type { Note } from '../../hooks/useNote';
 
 const useEditState = () => {
   const [isEditing, setIsEditing] = useState(false);
