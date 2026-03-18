@@ -2,7 +2,7 @@ import type { TopTeacher } from "@/hooks/useRecomendation";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-export const TeacherCard = ({ teacher, index }: { teacher: TopTeacher, index: number }) => {
+export const TeacherCard = ({ teacher, index, isBest = true }: { teacher: TopTeacher, index: number, isBest?: boolean }) => {
     const [expanded, setExpanded] = useState(false);
 
     // Filter out null/empty items and deduplicate courses/flags
@@ -11,7 +11,7 @@ export const TeacherCard = ({ teacher, index }: { teacher: TopTeacher, index: nu
     const flags = [...new Set(teacher.all_flags?.filter(Boolean) || [])];
 
     // Top 3 Ranking logic
-    const isTop3 = index < 3;
+    const isTop3 = isBest && index < 3;
     const rankColors = [
         'text-yellow-400 bg-yellow-400/10 border-yellow-400/30', // 1st
         'text-gray-300 bg-gray-300/10 border-gray-300/30',     // 2nd

@@ -208,6 +208,10 @@ export const AddSyllabusModal = ({ show, onClose }: AddSyllabusModalProps) => {
                         </div>
                     ) : (
                         <div className="w-full space-y-4">
+                            <div className="w-full p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-2 text-amber-500/90 text-xs md:text-sm"> 
+                                <Icon icon="mingcute:time-line" className="text-lg shrink-0" />
+                                <p>Esto puede tomar unos segundos mientras escaneamos el documento.</p>
+                            </div>
                             <h3 className="text-brand-cyan font-bold flex items-center gap-2 shrink-0">
                                 <Icon icon="mingcute:check-circle-fill" className="text-lg" />
                                 Datos Extraídos

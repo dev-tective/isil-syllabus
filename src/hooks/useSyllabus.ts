@@ -25,10 +25,9 @@ export function useCreateSyllabus() {
             });
 
             if (error) {
-                if (error.message?.includes('Edge Function returned a non-2xx status code')) {
-                    throw new Error('Error al procesar la solicitud. Por favor intenta nuevamente.');
-                }
-                throw new Error(error.message || 'Error al crear el sílabo');
+                // El body real está en error.context
+                const body = await error.context?.json().catch(() => null);
+                throw new Error(body?.error || error.message || 'Error al crear el sílabo');
             }
 
             return data.data;

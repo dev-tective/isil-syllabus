@@ -57,14 +57,20 @@ export const useGetTeachers = async (): Promise<string[]> => {
 
 // ─── get_top_teachers ─────────────────────────────────────────────────────────
 
-export const useGetTopTeachers = async (): Promise<TopTeacher[]> => {
+export const useGetTopTeachers = async (p_best?: boolean): Promise<TopTeacher[]> => {
     const { data, error } = await supabase
-        .rpc('get_top_teachers');
+        .rpc('get_top_teachers', { p_best });
 
     if (error) throw new Error(error.message);
 
     return (data ?? []) as TopTeacher[];
 };
+
+export async function useGetRecommendationFlags(): Promise<string[]> {
+    const { data, error } = await supabase.rpc('get_recommendation_flags');
+    if (error) throw new Error(error.message);
+    return data ?? [];
+}
 
 export const useCreateRecomendation = () => {
     const queryClient = useQueryClient();

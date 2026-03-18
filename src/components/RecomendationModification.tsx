@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query';
 import {
     useCreateRecomendation,
     useUpdateRecomendation,
     useGetTeachers,
-    RECOMMENDATION_TYPES,
+    useGetRecommendationFlags,
 } from "../hooks/useRecomendation";
 import { Icon } from "@iconify/react";
 
@@ -39,6 +40,12 @@ export const RecomendationModification = ({
     const [teacherName, setTeacherName] = useState(initialTeacherName);
     const [selectedFlags, setSelectedFlags] = useState<string[]>(initialRecommendation);
     const [isRecommended, setIsRecommended] = useState(initialIsRecommended);
+
+    const { data: availableFlags = [] } = useQuery({
+        queryKey: ['recommendationFlags'],
+        queryFn: useGetRecommendationFlags,
+        staleTime: 1000 * 60 * 60, // 1 hour
+    });
 
     // Autocomplete state
     const [teachers, setTeachers] = useState<string[]>([]);
@@ -117,13 +124,30 @@ export const RecomendationModification = ({
         }
     };
 
-    return (
-        <div className="mb-6 space-y-4 rounded-xl border border-brand-cyan/10 bg-brand-cyan/5 p-5">
-            <h3 className="text-sm font-bold text-white">
-                {isEditing ? "Edita" : "Agrega"} la recomendación
-            </h3>
+    const [isExpanded, setIsExpanded] = useState(isEditing);
 
-            {/* ── Teacher name with autocomplete ── */}
+    return (
+        <div className="mb-6 rounded-xl border border-brand-cyan/10 bg-brand-cyan/5">
+            <button
+                type="button"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-brand-cyan/5 focus:outline-none"
+            >
+                <div className="flex items-center gap-2 text-white">
+                    <h3 className="text-sm font-bold">
+                        {isEditing ? "Edita" : "Agrega"} la recomendación
+                    </h3>
+                </div>
+                <Icon
+                    icon={isExpanded ? "mingcute:up-line" : "mingcute:down-line"}
+                    className={`text-brand-cyan transition-transform duration-300 ${isExpanded ? "" : "rotate-180"}`}
+                />
+            </button>
+
+            <div className={`grid transition-all duration-300 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                <div className="overflow-hidden">
+                    <div className="space-y-4 p-5 pt-0">
+                        {/* ── Teacher name with autocomplete ── */}
             <div className="relative">
                 <label className="mb-1 block text-xs font-medium text-gray-400">
                     Nombre del profesor
@@ -184,13 +208,28 @@ export const RecomendationModification = ({
                 <span className="text-xs text-gray-500 italic">Toca para cambiar</span>
             </div>
 
+            {/* ── Comment textarea ── */}
+            <div>
+                <label className="mb-1 block text-xs font-medium text-gray-400">
+                    Comentario <span className="text-gray-600">(opcional)</span>
+                </label>
+                <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Comparte tu experiencia con este profesor, su metodología, etc..."
+                    rows={3}
+                    disabled={isPending}
+                    className="w-full resize-none rounded-xl border border-brand-cyan/20 bg-brand-dark/50 p-3 text-sm text-white placeholder-gray-500 transition-all focus:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan"
+                />
+            </div>
+
             {/* ── Flags / chips ── */}
             <div>
                 <label className="mb-2 block text-xs font-medium text-gray-400">
                     Características del profesor <span className="text-gray-600">(opcional)</span>
                 </label>
                 <div className="flex flex-wrap gap-2">
-                    {RECOMMENDATION_TYPES.map((flag) => {
+                    {availableFlags.map((flag) => {
                         const active = selectedFlags.includes(flag);
                         return (
                             <button
@@ -211,21 +250,6 @@ export const RecomendationModification = ({
                         );
                     })}
                 </div>
-            </div>
-
-            {/* ── Comment textarea ── */}
-            <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
-                    Comentario <span className="text-gray-600">(opcional)</span>
-                </label>
-                <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Comparte tu experiencia con este profesor, su metodología, etc..."
-                    rows={3}
-                    disabled={isPending}
-                    className="w-full resize-none rounded-xl border border-brand-cyan/20 bg-brand-dark/50 p-3 text-sm text-white placeholder-gray-500 transition-all focus:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan"
-                />
             </div>
 
             {/* ── Actions ── */}
@@ -258,6 +282,9 @@ export const RecomendationModification = ({
                     Ocurrió un error al guardar la recomendación.
                 </p>
             )}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

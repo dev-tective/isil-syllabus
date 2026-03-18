@@ -75,75 +75,99 @@ export const NoteModification = ({
         }
     };
 
+    const [isExpanded, setIsExpanded] = useState(isEditing);
+
     return (
-        <div className="p-5 bg-brand-cyan/5 border border-brand-cyan/10 rounded-xl space-y-4 mb-6">
-            <div className="space-y-2">
-                <h3 className="text-white font-bold text-sm">
-                    {isEditing ? "Edita" : "Agrega"} tu aporte sobre el curso
-                </h3>
-                <select
-                    value={difficulty || ""}
-                    onChange={(e) => setDifficulty((e.target.value as Difficulty) || null)}
-                    className="bg-brand-dark border border-brand-cyan/20 rounded-lg text-xs text-white p-2 focus:outline-none focus:border-brand-cyan"
-                    disabled={isPending}
-                >
-                    <option value="">Dificultad</option>
-                    <option value="fácil">Fácil</option>
-                    <option value="intermedio">Intermedio</option>
-                    <option value="difícil">Difícil</option>
-                </select>
+        <div className="mb-6 rounded-xl border border-brand-cyan/10 bg-brand-cyan/5">
+            <button
+                type="button"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-brand-cyan/5 focus:outline-none"
+            >
+                <div className="w-full flex items-center justify-between gap-2 text-white">
+
+                    <h3 className="text-sm font-bold">
+                        {isEditing ? "Edita" : "Agrega"} tu aporte sobre el curso
+                    </h3>
+                    <Icon
+                        icon={isExpanded ? "mingcute:up-line" : "mingcute:down-line"}
+                        className={`ml-auto text-brand-cyan transition-transform duration-300 ${isExpanded ? "" : "rotate-180"}`}
+                    />
+                </div>
+
+            </button>
+
+            <div className={`grid transition-all duration-300 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                <div className="overflow-hidden">
+                    <div className="space-y-4 p-5 pt-0">
+                        <div className="flex items-center gap-3">
+                            <select
+                                value={difficulty || ""}
+                                onClick={(e) => e.stopPropagation()}
+                                onChange={(e) => setDifficulty((e.target.value as Difficulty) || null)}
+                                className="bg-brand-dark border border-brand-cyan/20 rounded-lg text-xs text-white p-2 focus:outline-none focus:border-brand-cyan"
+                                disabled={isPending}
+                            >
+                                <option value="">Dificultad</option>
+                                <option value="fácil">Fácil</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="difícil">Difícil</option>
+                            </select>
+
+                        </div>
+                        <textarea
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            placeholder="Comparte tu experiencia, tips o recomendaciones sobre el curso..."
+                            className="w-full h-24 p-3 bg-brand-dark/50 text-white placeholder-gray-500 border border-brand-cyan/20 rounded-xl focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan resize-none transition-all text-sm"
+                            disabled={isPending}
+                        />
+
+                        {/* Lista de todos los videos detectados */}
+                        <VideoPreviewList videos={detectedVideos} />
+
+                        <div className="flex justify-end gap-3">
+                            {onCancel && (
+                                <button
+                                    onClick={onCancel}
+                                    disabled={isPending}
+                                    className="px-4 py-2 text-gray-400 hover:text-white transition-colors text-sm font-bold"
+                                >
+                                    Cancelar
+                                </button>
+                            )}
+                            <button
+                                onClick={handleSave}
+                                disabled={
+                                    !content.trim() ||
+                                    isPending ||
+                                    (isEditing &&
+                                        content === initialContent &&
+                                        difficulty === initialDifficulty)
+                                }
+                                className="px-6 py-2 bg-brand-cyan text-brand-dark font-bold text-sm rounded-xl hover:bg-brand-cyan-hover transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isPending ? (
+                                    <Icon icon="mingcute:loading-line" className="animate-spin text-lg" />
+                                ) : (
+                                    <Icon icon={isEditing ? "mingcute:save-line" : "mingcute:send-fill"} />
+                                )}
+                                {isPending
+                                    ? "Guardando..."
+                                    : isEditing
+                                        ? "Guardar cambios"
+                                        : "Publicar apunte"}
+                            </button>
+                        </div>
+
+                        {isError && (
+                            <p className="text-red-500 text-xs mt-2 text-right">
+                                Ocurrió un error al guardar el apunte.
+                            </p>
+                        )}
+                    </div>
+                </div>
             </div>
-
-            <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Comparte tu experiencia, tips o recomendaciones sobre el curso..."
-                className="w-full h-24 p-3 bg-brand-dark/50 text-white placeholder-gray-500 border border-brand-cyan/20 rounded-xl focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan resize-none transition-all text-sm"
-                disabled={isPending}
-            />
-
-            {/* Lista de todos los videos detectados */}
-            <VideoPreviewList videos={detectedVideos} />
-
-            <div className="flex justify-end gap-3">
-                {onCancel && (
-                    <button
-                        onClick={onCancel}
-                        disabled={isPending}
-                        className="px-4 py-2 text-gray-400 hover:text-white transition-colors text-sm font-bold"
-                    >
-                        Cancelar
-                    </button>
-                )}
-                <button
-                    onClick={handleSave}
-                    disabled={
-                        !content.trim() ||
-                        isPending ||
-                        (isEditing &&
-                            content === initialContent &&
-                            difficulty === initialDifficulty)
-                    }
-                    className="px-6 py-2 bg-brand-cyan text-brand-dark font-bold text-sm rounded-xl hover:bg-brand-cyan-hover transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {isPending ? (
-                        <Icon icon="mingcute:loading-line" className="animate-spin text-lg" />
-                    ) : (
-                        <Icon icon={isEditing ? "mingcute:save-line" : "mingcute:send-fill"} />
-                    )}
-                    {isPending
-                        ? "Guardando..."
-                        : isEditing
-                        ? "Guardar cambios"
-                        : "Publicar apunte"}
-                </button>
-            </div>
-
-            {isError && (
-                <p className="text-red-500 text-xs mt-2 text-right">
-                    Ocurrió un error al guardar el apunte.
-                </p>
-            )}
         </div>
     );
 };

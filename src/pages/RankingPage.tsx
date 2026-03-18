@@ -1,26 +1,49 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Icon } from '@iconify/react';
 import { useGetTopTeachers } from '@/hooks/useRecomendation';
 import { TeacherCard } from '@/components/TeacherCard';
 
 export const RankingPage = () => {
+    const [isBest, setIsBest] = useState(true);
+
     const { data: teachers, isLoading, error } = useQuery({
-        queryKey: ['topTeachers'],
-        queryFn: useGetTopTeachers,
+        queryKey: ['topTeachers', isBest],
+        queryFn: () => useGetTopTeachers(isBest),
     });
 
     return (
         <div className="flex flex-col items-center justify-start w-full min-h-screen pb-20 fade-in">
             {/* Header section */}
             <section className="w-11/12 max-w-4xl mx-auto py-8 space-y-2">
-                <div className="flex items-center gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white">Ranking de Profesores</h1>
-                        <p className="text-sm text-gray-400 mt-1">
-                            Descubre qué profesores tienen las mejores recomendaciones de la comunidad.
-                        </p>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between w-full gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-white">
+                                {isBest ? "Ranking de Mejores Profesores" : "Ranking de Peores Profesores"}
+                            </h1>
+                            <p className="text-sm text-gray-400 mt-1">
+                                {isBest 
+                                    ? "Descubre qué profesores tienen las mejores recomendaciones de la comunidad."
+                                    : "Profesores con las calificaciones más bajas según la comunidad."}
+                            </p>
+                        </div>
+                        
+                        <button
+                            onClick={() => setIsBest(!isBest)}
+                            className={`
+                                flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all
+                                ${isBest 
+                                    ? "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20" 
+                                    : "bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 hover:bg-brand-cyan/20"}
+                            `}
+                        >
+                            <Icon 
+                                icon={isBest ? "mingcute:dislike-line" : "mingcute:like-line"} 
+                                className="text-lg" 
+                            />
+                            {isBest ? "No recomendados" : "Más recomendados"}
+                        </button>
                     </div>
-                </div>
             </section>
 
             {/* List section */}
@@ -46,7 +69,12 @@ export const RankingPage = () => {
                 )}
 
                 {teachers && teachers.map((teacher, index) => (
-                    <TeacherCard key={teacher.teacher_name} teacher={teacher} index={index} />
+                    <TeacherCard 
+                        key={teacher.teacher_name} 
+                        teacher={teacher} 
+                        index={index} 
+                        isBest={isBest}
+                    />
                 ))}
             </section>
         </div>
