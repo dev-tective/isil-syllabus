@@ -192,7 +192,7 @@ export const Login = () => {
                     <button
                         type="button"
                         onClick={() => handleOAuth('facebook')}
-                        disabled={loading}
+                        disabled={true}
                         className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-brand-cyan/10 bg-brand-cyan/5 text-sm font-bold text-white transition-all hover:border-blue-500/30 hover:bg-blue-500/10 disabled:opacity-50"
                     >
                         <Icon icon="logos:facebook" className="text-xl" />
