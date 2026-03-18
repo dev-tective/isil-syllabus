@@ -200,7 +200,7 @@ export const Login = () => {
                     </button>
                 </div>
 
-                <div className="text-center pt-2">
+                <div className="text-center pt-2 space-y-4">
                     <button
                         type="button"
                         onClick={() => {
@@ -213,10 +213,27 @@ export const Login = () => {
                         {isLogin 
                             ? "¿No tienes cuenta? " 
                             : "¿Ya tienes cuenta? "}
-                        <strong className="text-brand-cyan hover:text-brand-cyan-hover">
+                        <strong className="text-brand-cyan hover:text-brand-cyan-hover transition-colors">
                             {isLogin ? "Regístrate aquí" : "Inicia sesión"}
                         </strong>
                     </button>
+
+                    <div className="pt-2">
+                        <Link 
+                            to="/" 
+                            className="
+                                inline-flex items-center gap-2 
+                                text-sm font-semibold text-gray-500 hover:text-white 
+                                transition-all group
+                            "
+                        >
+                            Explorar sin una cuenta
+                            <Icon 
+                                icon="mingcute:arrow-right-line" 
+                                className="text-lg group-hover:translate-x-1 transition-transform" 
+                            />
+                        </Link>
+                    </div>
                 </div>
 
                 {/* ── Legal links ── */}
