@@ -31,7 +31,7 @@ export const PrivacyPolicy = () => {
 
                 <Section title="1. ¿Quiénes somos?">
                     <p>
-                        <strong className="text-white">ISIL Syllabus</strong> es una plataforma educativa gratuita,
+                        <strong className="text-white">Comunidad ISIL</strong> es una plataforma educativa gratuita,
                         creada por estudiantes para estudiantes del Instituto ISIL. Su único propósito es facilitar
                         el acceso compartido a sílabos académicos sin fines de lucro. El contenido académico
                         pertenece al Instituto ISIL.
@@ -77,7 +77,7 @@ export const PrivacyPolicy = () => {
                     <p>
                         Al usar «Iniciar sesión con Google», Google comparte con nosotros tu correo electrónico,
                         nombre y foto de perfil pública. Esta información solo se utiliza para crear y gestionar
-                        tu sesión dentro de ISIL Syllabus. Puedes revocar este acceso en cualquier momento desde
+                        tu sesión dentro de Comunidad ISIL. Puedes revocar este acceso en cualquier momento desde
                         la{" "}
                         <a
                             href="https://myaccount.google.com/permissions"

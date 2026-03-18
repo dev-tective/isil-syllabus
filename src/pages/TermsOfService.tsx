@@ -31,7 +31,7 @@ export const TermsOfService = () => {
 
                 <Section title="1. Aceptación de las condiciones">
                     <p>
-                        Al acceder o utilizar <strong className="text-white">ISIL Syllabus</strong>, aceptas
+                        Al acceder o utilizar <strong className="text-white">Comunidad ISIL</strong>, aceptas
                         quedar vinculado por estas Condiciones del Servicio. Si no estás de acuerdo con alguna
                         de ellas, no debes utilizar la plataforma.
                     </p>
@@ -39,7 +39,7 @@ export const TermsOfService = () => {
 
                 <Section title="2. Descripción del servicio">
                     <p>
-                        ISIL Syllabus es una plataforma educativa gratuita, sin fines de lucro, creada por
+                        Comunidad ISIL es una plataforma educativa gratuita, sin fines de lucro, creada por
                         estudiantes para facilitar el acceso a sílabos académicos del Instituto ISIL. El servicio
                         se ofrece «tal cual» y puede ser modificado, suspendido o descontinuado sin previo aviso.
                     </p>
@@ -82,7 +82,7 @@ export const TermsOfService = () => {
                     <p>
                         Al subir contenido (por ejemplo, sílabos o comentarios), declaras que tienes los derechos
                         necesarios para compartirlo o que el contenido proviene de fuentes institucionales de
-                        libre acceso. ISIL Syllabus no se responsabiliza por el contenido subido por los usuarios.
+                        libre acceso. Comunidad ISIL no se responsabiliza por el contenido subido por los usuarios.
                     </p>
                     <p className="mt-2">
                         Nos reservamos el derecho de remover cualquier contenido que consideremos inapropiado o
@@ -93,14 +93,14 @@ export const TermsOfService = () => {
                 <Section title="6. Propiedad intelectual">
                     <p>
                         Los sílabos y materiales académicos disponibles en la plataforma son propiedad del
-                        Instituto ISIL. ISIL Syllabus no reclama derechos sobre dicho contenido. El código
+                        Instituto ISIL. Comunidad ISIL no reclama derechos sobre dicho contenido. El código
                         fuente de la plataforma es de propiedad de sus creadores.
                     </p>
                 </Section>
 
                 <Section title="7. Exención de responsabilidad">
                     <p>
-                        ISIL Syllabus se proporciona <strong className="text-white">sin garantías de ningún tipo</strong>.
+                        Comunidad ISIL se proporciona <strong className="text-white">sin garantías de ningún tipo</strong>.
                         No nos responsabilizamos por:
                     </p>
                     <ul className="list-disc pl-6 space-y-1 mt-2">
@@ -115,7 +115,7 @@ export const TermsOfService = () => {
                     <p>
                         Podemos modificar o discontinuar el servicio en cualquier momento. También podemos
                         actualizar estas Condiciones; los cambios importantes serán notificados por correo
-                        electrónico o mediante un aviso en la plataforma. El uso continuado de ISIL Syllabus
+                        electrónico o mediante un aviso en la plataforma. El uso continuado de Comunidad ISIL
                         después de tales cambios implica la aceptación de las nuevas condiciones.
                     </p>
                 </Section>
